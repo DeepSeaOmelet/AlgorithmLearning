@@ -166,6 +166,21 @@ public class dpDemo {
      * @return
      */
     public int lastStoneWeightII(int[] stones) {
+        int sum = 0;
+        for (int stone : stones) {
+            sum += stone;
+        }
+        int avg = sum / 2;
+        int[] dp = new int[avg + 1];
+        for (int i = 0; i < stones.length; i++) {
+            for (int j = avg; j >= stones[i]; j--) {
+                dp[j] = Math.max(dp[j], dp[j - stones[i]] + stones[i]);
+            }
+        }
+        return sum - dp[avg] - dp[avg];
+    }
+
+    public int lastStoneWeightII2(int[] stones) {
         //怎么转换成背包问题：
         //切入点：最小的可能重量，因为两个石头会合并成两个石头的绝对值，保证最小可能，就需要将石头组分成两组，使得两个数组的元素和尽量相等
         // 然后每一组各一块组成相似的一对，进行粉碎
