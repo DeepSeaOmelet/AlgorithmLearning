@@ -1,4 +1,4 @@
-package com.test.jie.leetCode;
+package com.test.jie.leetCode.dp;
 
 import java.util.Arrays;
 
@@ -92,6 +92,34 @@ public class dpDemo {
          * @return
          */
         public int findTargetSumWays(int[] nums, int target) {
+//            int sum = 0;
+            for (int x : nums) {
+                target += x;
+            }
+            //target会是负数，(sum + target)%2==1说明筹不齐负数
+            if (target < 0 || target % 2 == 1) {
+                return 0;
+            }
+            //求出正数集合，负数集合，target=正数-负数，负数+正数=sum
+//            int bagWeight = (sum + target)/2;
+            target /= 2;
+            //现在问题变成nums中有多少种和为 bagWeight的子集合
+            //1  01背包 bagWeight，nums是物品
+            int[] dp = new int[target + 1];
+            //2 怎么初始化？
+            dp[0] = 1;
+            //3 j表示背包容量
+            for (int i = 0; i < nums.length; i++) {
+                for (int j = target; j >= nums[i]; j--) {
+                    //4 递推公式？ dp[j]表示对于容量为j的背包有j-nums[i]种方法装满
+                    dp[j] += dp[j - nums[i]];
+                }
+            }
+            System.out.println(Arrays.toString(dp));
+            return dp[target];
+        }
+
+        public int findTargetSumWays_2(int[] nums, int target) {
             //从数组中的每个元素有2中状态，加上是统计数量，基本上可以转换成01背包
             //怎么转换成01背包，假如加法的总和为x，那么减法对应的总和就是sum-x。题目要求的是x-(sum-x)=target，那么x=(sum+target)/2
             //这样题目就转换为，装满容量为x背包类似于「分割等和子集」
