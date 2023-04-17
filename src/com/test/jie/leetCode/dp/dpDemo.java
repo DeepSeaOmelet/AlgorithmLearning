@@ -9,7 +9,44 @@ public class dpDemo {
     public static void main(String[] args) {
         dpDemo dp = new dpDemo();
 //        dp._01bagProblemDemo(new int[]{1, 3, 4}, new int[]{15, 20, 30}, 4);
-        dp._01bagProblemDemo_1D(new int[]{1, 3, 4}, new int[]{15, 20, 30}, 4);
+//        dp._01bagProblemDemo_1D(new int[]{1, 3, 4}, new int[]{15, 20, 30}, 4);
+        testCompletePack();
+        System.out.println();
+        testCompletePack2();
+    }
+
+    /**
+     * * 完全背包测试 代码
+     */
+    private static void testCompletePack() {
+        //二维的滚动数组
+        int[] weight = {2, 3, 4};
+        int[] value = {15, 20, 30};
+        int bagWeight = 4;
+        int[][] dp = new int[weight.length + 1][bagWeight + 1];
+        for (int i = 0; i < weight.length; i++) {
+            for (int j = 0; j <= bagWeight; j++) {
+                if (j < weight[i]) {
+                    dp[i + 1][j] = dp[i][j];
+                } else {
+                    dp[i + 1][j] = Math.max(dp[i][j], dp[i + 1][j - weight[i]] + value[i]);
+                }
+            }
+        }
+    }
+
+    private static void testCompletePack2() {
+        //一维的滚动数组
+        int[] weight = {2, 3, 4};
+        int[] value = {15, 20, 30};
+        int bagWeight = 4;
+        int[] dp = new int[bagWeight + 1];
+        for (int i = 0; i < weight.length; i++) {
+            for (int j = weight[i]; j <= bagWeight; j++) {
+                dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i]);
+            }
+            System.out.println(Arrays.toString(dp));
+        }
     }
 
     /**
