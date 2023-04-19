@@ -1,4 +1,4 @@
-package com.test.jie.leetCode.Daily.Y2023;
+package com.test.jie.leetCode.Daily.Y2023.mon4;
 
 import com.test.jie.leetCode.tool.TreeNode;
 
