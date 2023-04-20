@@ -38,7 +38,8 @@ public class StringEdit {
                 sb2.append(new String(bytes, 0, count));
             }
             file.close();
-            String result = sb2.toString().replaceAll("fileName", sb.toString()).replaceAll("mon", mon);
+            String result = sb2.toString().replaceAll("fileName", sb.toString()).replaceAll("mon", mon)
+                    .replaceAll("year",year);
 
             Date date = new Date();
             int idx = result.indexOf("@d{");

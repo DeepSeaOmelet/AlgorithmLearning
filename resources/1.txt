@@ -1,4 +1,4 @@
-package com.test.jie.leetCode.mon;
+package com.test.jie.leetCode.Daily.year.mon;
 
 /**
  *  @d{YYYY/MM/dd}
