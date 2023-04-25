@@ -136,4 +136,5 @@ class HouseRobber3 {
         ans[1] = left[0] + right[0];
         return ans;
     }
+
 }
