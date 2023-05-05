@@ -49,7 +49,7 @@ public class DiscontinuousSubsequences {
     }
 }
 
-class Solution2 {
+class DiscontinuousSubsequencesSolution2 {
     /**
      * 674. 最长连续递增序列    https://leetcode.cn/problems/longest-continuous-increasing-subsequence/
      * 简单
@@ -120,7 +120,7 @@ class Solution2 {
  * 1 <= nums1.length, nums2.length <= 1000
  * 0 <= nums1[i], nums2[i] <= 100
  */
-class Solution3 {
+class DiscontinuousSubsequencesSolution3 {
     public int findLength2(int[] nums1, int[] nums2) {
         int[] dp = new int[nums2.length + 1];
         int ans = 0;
@@ -179,7 +179,7 @@ class Solution3 {
  * 1 <= text1.length, text2.length <= 1000
  * text1 和 text2 仅由小写英文字符组成。
  */
-class Solution4 {
+class DiscontinuousSubsequencesSolution4 {
     public int longestCommonSubsequence(String text1, String text2) {
         int ans = 0;
         int[] dp = new int[text2.length() + 1];
