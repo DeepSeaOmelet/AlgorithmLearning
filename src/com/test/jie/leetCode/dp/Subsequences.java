@@ -213,6 +213,8 @@ class SubsequencesSolution4 {
                     dp[i][j] = dp[i - 1][j - 1] + 1;
                     ans = Math.max(ans, dp[i][j]);
                 } else {
+                    //这里表示：dp[i-1][j]是对text1字段范围为[0,i-2]和tex2字段范围为[0,j-1]的结果，
+                    // 而dp[i][j-1]是对text1字段范围为[0,i-1]和tex2字段范围为[0,j-2]的结果
                     dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
                 }
             }
@@ -332,6 +334,25 @@ class SubsequencesSolution6 {
  * 两个字符串都只由小写字符组成。
  */
 class SubsequencesSolution7 {
+    public boolean isSubsequence2(String s, String t) {
+        int[][] dp = new int[s.length() + 1][t.length() + 1];
+        for (int i = 1; i <= s.length(); i++) {
+            char s1 = s.charAt(i - 1);
+            for (int j = 1; j <= t.length(); j++) {
+                char t1 = t.charAt(j - 1);
+                if (s1 == t1) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = dp[i][j - 1];
+                }
+            }
+        }
+        for (int[] d : dp) {
+            System.out.println(Arrays.toString(d));
+        }
+        return dp[s.length()][t.length()] == s.length();
+    }
+
     public boolean isSubsequence(String s, String t) {
         if (s.length() > t.length()) {
             return false;
