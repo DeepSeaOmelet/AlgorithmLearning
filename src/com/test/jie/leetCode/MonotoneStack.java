@@ -1,5 +1,7 @@
 package com.test.jie.leetCode;
 
+import com.test.jie.leetCode.tool.ListNode;
+
 import java.util.*;
 
 //单调栈
@@ -133,11 +135,10 @@ class MonotoneStackSolution2 {
         }
         for (int i = 0; i < nums2.length; i++) {
             while (!s.isEmpty() && nums2[i] > s.peekLast()) {
-                int idx = map.getOrDefault(s.peekLast(), -1);
-                if (idx != -1) {
-                    ans[idx] = nums2[i];
+                int cur = s.pollLast();
+                if (map.containsKey(cur)) {
+                    ans[map.get(cur)] = nums2[i];
                 }
-                s.pollLast();
             }
             s.add(nums2[i]);
         }
@@ -165,4 +166,6 @@ class MonotoneStackSolution2 {
         }
         return ans;
     }
+
+
 }
