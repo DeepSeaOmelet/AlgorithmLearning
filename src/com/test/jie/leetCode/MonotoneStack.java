@@ -208,8 +208,144 @@ class MonotoneStackSolution3 {
         return ans;
     }
 }
-class Solution {
-    public int trap(int[] height) {
 
+/**
+ * 42. 接雨水  https://leetcode.cn/problems/trapping-rain-water/
+ * 困难
+ * 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+ * <p>
+ * 示例 1：
+ * 输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+ * 输出：6
+ * 解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
+ * 示例 2：
+ * 输入：height = [4,2,0,3,2,5]
+ * 输出：9
+ * <p>
+ * 提示：
+ * n == height.length
+ * 1 <= n <= 2 * 10^4
+ * 0 <= height[i] <= 10^5
+ */
+class MonotoneStackSolution4 {
+    public int trap3(int[] height) {
+        //暴力
+        //计算 每个当前列最高的水位
+        int sum = 0;
+        for (int i = 1; i < height.length - 1; i++) {
+            //第一个柱子和最后一个不接水
+//            if (i==0||i==height.length-1){
+//                continue;
+//            }
+            int rHeight = height[i];
+            int lHeight = height[i];
+            //用左右夹逼来计算当前水位，最高水位由最短柱子高度决定
+            for (int j = i - 1; j >= 0; j--) {
+                lHeight = Math.max(lHeight, height[j]);
+            }
+            for (int j = i + 1; j < height.length; j++) {
+                rHeight = Math.max(rHeight, height[j]);
+            }
+            int curHeight = Math.min(rHeight, lHeight) - height[i];
+            if (curHeight > 0) {
+                sum += curHeight;
+            }
+        }
+        return sum;
+    }
+
+    public int trap4(int[] height) {
+        //暴力 带记忆优化
+        if (height.length <= 2) {
+            return 0;
+        }
+        int sum = 0;
+        int[] lHeight = new int[height.length];
+        lHeight[0] = height[0];
+        //记录每列左边最高
+        for (int i = 1; i < height.length; i++) {
+            lHeight[i] = Math.max(lHeight[i - 1], height[i]);
+        }
+        int[] rHeight = new int[height.length];
+        rHeight[height.length - 1] = height[height.length - 1];
+        //记录每列右边最高
+        for (int i = height.length - 2; i >= 0; i--) {
+            rHeight[i] = Math.max(rHeight[i + 1], height[i]);
+        }
+        //计算高度
+        for (int i = 0; i < height.length; i++) {
+            int curHeight = Math.min(rHeight[i], lHeight[i]) - height[i];
+            if (curHeight > 0) {
+                sum += curHeight;
+            }
+        }
+        return sum;
+    }
+
+
+    public int trap2(int[] height) {
+        //单调栈   按行计算水位
+        int ans = 0;
+        int n = height.length;
+        if (n <= 2) {
+            return 0;
+        }
+        //s存储的是height下标
+        LinkedList<Integer> s = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            while (!s.isEmpty() && height[i] > height[s.peek()]) {
+                int mid = s.pop();
+                if (!s.isEmpty()) {
+                    int w = i - s.peek() - 1;
+                    int h = Math.min(height[i], height[s.peek()]) - height[mid];
+                    ans += w * h;
+                    //System.out.println(ans);
+                }
+            }
+            s.push(i);
+        }
+        return ans;
+    }
+
+    public int trap(int[] height) {
+        int size = height.length;
+
+        if (size <= 2) return 0;
+
+        // in the stack, we push the index of array
+        // using height[] to access the real height
+        Stack<Integer> stack = new Stack<Integer>();
+        stack.push(0);
+
+        int sum = 0;
+        for (int index = 1; index < size; index++) {
+            int stackTop = stack.peek();
+            if (height[index] < height[stackTop]) {
+                stack.push(index);
+            } else if (height[index] == height[stackTop]) {
+                // 因为相等的相邻墙，左边一个是不可能存放雨水的，所以pop左边的index, push当前的index
+                stack.pop();
+                stack.push(index);
+            } else {
+                //pop up all lower value
+                int heightAtIdx = height[index];
+                while (!stack.isEmpty() && (heightAtIdx > height[stackTop])) {
+                    int mid = stack.pop();
+
+                    if (!stack.isEmpty()) {
+                        int left = stack.peek();
+
+                        int h = Math.min(height[left], height[index]) - height[mid];
+                        int w = index - left - 1;
+                        int hold = h * w;
+                        if (hold > 0) sum += hold;
+                        stackTop = stack.peek();
+                    }
+                }
+                stack.push(index);
+            }
+        }
+
+        return sum;
     }
 }
