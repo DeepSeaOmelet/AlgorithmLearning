@@ -345,7 +345,112 @@ class MonotoneStackSolution4 {
                 stack.push(index);
             }
         }
-
         return sum;
+    }
+}
+
+/**
+ * 84. 柱状图中最大的矩形
+ * 困难
+ * 给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
+ * 求在该柱状图中，能够勾勒出来的矩形的最大面积。
+ * <p>
+ * 示例 1:
+ * 输入：heights = [2,1,5,6,2,3]
+ * 输出：10
+ * 解释：最大的矩形为图中红色区域，面积为 10
+ * 示例 2：
+ * 输入： heights = [2,4]
+ * 输出： 4
+ * <p>
+ * 提示：
+ * 1 <= heights.length <=105
+ * 0 <= heights[i] <= 104
+ */
+class MonotoneStackSolution5 {
+
+    public int largestRectangleArea(int[] heights) {
+        //暴力 超时
+        int max = 0;
+        if (heights.length == 1) {
+            return heights[0];
+        }
+        for (int i = 0; i < heights.length; i++) {
+            int leftIdx = i;
+            for (int j = i - 1; j >= 0; j--) {
+                if (heights[i] > heights[j]) {
+                    break;
+                }
+                leftIdx = j;
+            }
+            int rightIdx = i;
+            for (int j = i + 1; j < heights.length; j++) {
+                if (heights[i] > heights[j]) {
+                    break;
+                }
+                rightIdx = j;
+            }
+            int cur = heights[i] * (rightIdx - leftIdx + 1);
+            max = Math.max(max, cur);
+        }
+        return max;
+    }
+
+    public int largestRectangleArea2(int[] heights) {
+        int n = heights.length;
+        int[] minLeftIndex = new int[n];
+        int[] minRightIndex = new int[n];
+
+        // 记录每个柱子 左边第一个小于该柱子的下标
+        minLeftIndex[0] = -1;
+        for (int i = 1; i < n; i++) {
+            int j = i - 1;
+            while (j >= 0 && heights[j] >= heights[i]) {
+                j = minLeftIndex[j];
+            }
+            minLeftIndex[i] = j;
+        }
+        // 记录每个柱子 右边第一个小于该柱子的下标
+        minRightIndex[n - 1] = n;
+        for (int i = n - 2; i >= 0; i--) {
+            int j = i + 1;
+            while (j < n && heights[j] >= heights[i]) {
+                j = minRightIndex[j];
+            }
+            minRightIndex[i] = j;
+        }
+        //求和
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            int cur = (minRightIndex[i] - minLeftIndex[i] - 1) * heights[i];
+            max = Math.max(max, cur);
+        }
+        return max;
+    }
+
+    public int largestRectangleArea3(int[] heights) {
+        //单调栈 递减
+        int n = heights.length;
+        if (n <= 1) {
+            return heights[0];
+        }
+        //需要头尾加0，用以计算没有被左右小于的柱子夹住的柱子
+        int[] newHeights = new int[n + 2];
+        for (int i = 0; i < n; i++) {
+            newHeights[i + 1] = heights[i];
+        }
+        newHeights[0] = 0;
+        newHeights[n + 1] = 0;
+        int max = 0;
+        LinkedList<Integer> s = new LinkedList<>();
+        for (int i = 0; i < n+2; i++) {
+            while (!s.isEmpty() && newHeights[i] < newHeights[s.peek()]) {
+                int cur = s.pop();
+                int width = i - s.peek() - 1;
+                max = Math.max(max, width * newHeights[cur]);
+            }
+            s.push(i);
+        }
+        return max;
     }
 }
