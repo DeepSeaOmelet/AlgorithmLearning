@@ -428,7 +428,32 @@ class MonotoneStackSolution5 {
         return max;
     }
 
-    public int largestRectangleArea3(int[] heights) {
+//    public int largestRectangleArea3(int[] heights) {
+//        int n = heights.length;
+//        int[] newHeights = new int[n + 2];
+//        newHeights[0] = 0;
+//        newHeights[n + 1] = 0;
+//        for (int i = 0; i < n; i++) {
+//            newHeights[i + 1] = heights[i];
+//        }
+//        int max = 0;
+//        LinkedList<Integer> s = new LinkedList<>();
+//        for (int i = 0; i < n + 2; i++) {
+//            while (!s.isEmpty() && newHeights[i] < newHeights[s.peek()]) {
+//                int cur = s.pop();
+//                if (!s.isEmpty()) {
+//                    //长x宽
+//                    int curSize = newHeights[cur] * (i - s.peek() - 1);
+//                    max = Math.max(max, curSize);
+//                }
+//            }
+//            s.push(i);
+//        }
+//        return max;
+//    }
+
+
+    public int largestRectangleArea3_1(int[] heights) {
         //单调栈 递减
         int n = heights.length;
         if (n <= 1) {
@@ -443,7 +468,7 @@ class MonotoneStackSolution5 {
         newHeights[n + 1] = 0;
         int max = 0;
         LinkedList<Integer> s = new LinkedList<>();
-        for (int i = 0; i < n+2; i++) {
+        for (int i = 0; i < n + 2; i++) {
             while (!s.isEmpty() && newHeights[i] < newHeights[s.peek()]) {
                 int cur = s.pop();
                 int width = i - s.peek() - 1;
