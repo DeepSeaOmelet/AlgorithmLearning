@@ -283,19 +283,100 @@ public class carlExtras {
         int m = nums.length;
         //rightSum[i]等于nums[i+1,m)之和
         int[] rightSum = new int[m + 1];
-        rightSum[m - 1] = nums[m-1];
+        rightSum[m - 1] = nums[m - 1];
         for (int i = m - 2; i >= 0; i--) {
             rightSum[i] = rightSum[i + 1] + nums[i];
         }
         //System.out.println(Arrays.toString(rightSum));
         int leftSum = 0;
         for (int i = 0; i < m; i++) {
-            if (leftSum == (rightSum[i]-nums[i])) {
+            if (leftSum == (rightSum[i] - nums[i])) {
                 return i;
             }
             leftSum += nums[i];
         }
         return -1;
+    }
+
+    /**
+     * 34. 在排序数组中查找元素的第一个和最后一个位置
+     * 中等
+     * 给你一个按照非递减顺序排列的整数数组 nums，和一个目标值 target。请你找出给定目标值在数组中的开始位置和结束位置。
+     * 如果数组中不存在目标值 target，返回 [-1, -1]。
+     * 你必须设计并实现时间复杂度为 O(log n) 的算法解决此问题。
+     * <p>
+     * 示例 1：
+     * 输入：nums = [5,7,7,8,8,10], target = 8
+     * 输出：[3,4]
+     * 示例 2：
+     * 输入：nums = [5,7,7,8,8,10], target = 6
+     * 输出：[-1,-1]
+     * 示例 3：
+     * 输入：nums = [], target = 0
+     * 输出：[-1,-1]
+     * <p>
+     * 提示：
+     * 0 <= nums.length <= 105
+     * -109 <= nums[i] <= 109
+     * nums 是一个非递减数组
+     * -109 <= target <= 109
+     *
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int[] searchRange(int[] nums, int target) {
+        //情况一：target 在数组范围的右边或者左边，例如数组{3, 4, 5}，target为2或者数组{3, 4, 5},target为6，此时应该返回{-1, -1}
+        //情况二：target 在数组范围中，且数组中不存在target，例如数组{3,6,7},target为5，此时应该返回{-1, -1}
+        //情况三：target 在数组范围中，且数组中存在target，例如数组{3,6,7},target为6，此时应该返回{1, 1}
+        int rightBorder = getRightBorder(nums, target);
+        int leftBorder = getLeftBorder(nums, target);
+        //System.out.println(leftBorder+":"+rightBorder);
+        if (rightBorder == -2 || leftBorder == -2) {
+            return new int[]{-1, -1};
+
+        }
+        if (rightBorder - leftBorder > 1) {
+            return new int[]{leftBorder + 1, rightBorder - 1};
+        }
+        return new int[]{-1, -1};
+    }
+
+    public int getRightBorder(int[] nums, int target) {
+        // 二分查找，寻找target的右边界（不包括target）
+        // 如果rightBorder为没有被赋值（即target在数组范围的左边，例如数组[3,3]，target为2），为了处理情况一
+        int l = 0;
+        int r = nums.length - 1;// 定义target在左闭右闭的区间里，[left, right]
+        int rightBorder = -2;   // 记录一下rightBorder没有被赋值的情况
+        //二分法
+        while (l <= r) {
+            int mid = l + r >> 1;
+            if (nums[mid] > target) {
+                r = mid - 1;
+            } else {// 当nums[middle] == target的时候，更新left，这样才能得到target的右边界
+                l = mid + 1;
+                rightBorder = l;
+            }
+            System.out.println(l+":"+r);
+        }
+        return rightBorder;
+    }
+
+    public int getLeftBorder(int[] nums, int target) {
+        int l = 0;
+        int r = nums.length - 1;//左闭右闭
+        int leftBorder = -2;// 记录一下leftBorder没有被赋值的情况
+        while (l <= r) {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target) {
+                // 寻找左边界，就要在nums[middle] == target的时候更新right
+                r = mid - 1;
+                leftBorder = r;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return leftBorder;
     }
 
     public static void main(String[] args) {
