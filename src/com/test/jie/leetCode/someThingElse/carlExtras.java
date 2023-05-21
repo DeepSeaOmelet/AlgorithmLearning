@@ -539,5 +539,108 @@ public class carlExtras {
         }
         return dummyHead.next;
     }
+
+    /**
+     * 234. 回文链表
+     * 简单
+     * 给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。
+     * <p>
+     * 示例 1：
+     * 输入：head = [1,2,2,1]
+     * 输出：true
+     * 示例 2：
+     * 输入：head = [1,2]
+     * 输出：false
+     * <p>
+     * 提示：
+     * 链表中节点数目在范围[1, 10^5] 内
+     * 0 <= Node.val <= 9
+     * <p>
+     * 进阶：你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+     *
+     * @param head
+     * @return
+     */
+    public boolean isPalindrome(ListNode head) {
+        //进阶？
+        //递归,通过递归的回退和链表遍历进行比较
+        isPalindromePreListNode = head;
+        return checkIsPalindrome(head);
+    }
+
+    ListNode isPalindromePreListNode;
+
+    public boolean checkIsPalindrome(ListNode curHead) {
+        if (curHead == null) {
+            return true;
+        }
+        if (!checkIsPalindrome(curHead.next)) {
+            return false;
+        }
+        if (isPalindromePreListNode.val == curHead.val) {
+            isPalindromePreListNode = isPalindromePreListNode.next;
+            return true;
+        } else return false;
+    }
+
+    public boolean isPalindrome2(ListNode head) {
+        ListNode dummyHead = new ListNode(-1);
+        dummyHead.next = head;
+        List<ListNode> list = new ArrayList<>();
+        while (head != null) {
+            list.add(head);
+            head = head.next;
+        }
+        for (int i = 0, j = list.size() - 1; i <= j; i++, j--) {
+            if (list.get(i).val != list.get(j).val) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    public boolean isPalindrome3(ListNode head) {
+        //双指针
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode slow = head;//走一步
+        ListNode fast = head;//走两步
+        ListNode pre = head;//作为slow的前一个链表
+        while (fast != null && fast.next != null) {
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        //切割链表
+        pre.next = null;
+        ListNode cur1 = head;
+        ListNode cur2 = reverseList(slow);
+        //比较回文
+        while (cur1 != null && cur2 != null) {
+            if (cur1.val != cur2.val) {
+                return false;
+            }
+            cur1 = cur1.next;
+            cur2 = cur2.next;
+        }
+        //若链表数量为奇数，cur2可能会多一个节点
+        return true;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        //反转链表
+        ListNode temp = null;
+        ListNode pre = null;
+        //3->2->1  => 1->2->3
+        while (head != null) {
+            temp = head.next;
+            head.next = pre;
+            pre = head;
+            head = temp;
+        }
+        return pre;
+    }
 }
 
