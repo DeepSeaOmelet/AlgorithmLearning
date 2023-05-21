@@ -817,7 +817,7 @@ public class GreedyDemo {
         GreedyDemo gg = new GreedyDemo();
         System.out.println(gg.monotoneIncreasingDigits(332));
         System.out.println();
-        String s = new BASE64Encoder().encodeBuffer("zzbai@jstest2".getBytes(StandardCharsets.UTF_8));
+        String s = new BASE64Encoder().encodeBuffer("zggbei&jstjnsto".getBytes(StandardCharsets.UTF_8));
         System.out.println(s);
         System.out.println(new String(new BASE64Decoder().decodeBuffer(s)));
     }
