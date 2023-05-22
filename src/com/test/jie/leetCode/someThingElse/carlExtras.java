@@ -642,5 +642,133 @@ public class carlExtras {
         }
         return pre;
     }
+
+    //143. 重排链表
+    //中等
+    //给定一个单链表 L 的头节点 head ，单链表 L 表示为：
+    //L0 → L1 → … → Ln - 1 → Ln
+    //请将其重新排列后变为：
+    //L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+    //不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+    //
+    //示例 1：
+    //输入：head = [1,2,3,4]
+    //输出：[1,4,2,3]
+    //示例 2：
+    //输入：head = [1,2,3,4,5]
+    //输出：[1,5,2,4,3]
+    //
+    //提示：
+    //链表的长度范围为 [1, 5 * 104]
+    //1 <= node.val <= 1000
+    public void reorderList(ListNode head) {
+        ListNode dummyHead = new ListNode(-1);
+        dummyHead.next = head;
+        LinkedList<ListNode> linkedList = new LinkedList<>();
+        while (head != null) {
+            linkedList.add(head);
+            head = head.next;
+        }
+        head = dummyHead;
+        boolean isBack = false;
+        while (head != null && !linkedList.isEmpty()) {
+            if (!isBack) {
+                head.next = linkedList.removeFirst();
+            } else {
+                head.next = linkedList.removeLast();
+            }
+            isBack = !isBack;
+            head = head.next;
+        }
+    }
+
+    /**
+     * 141. 环形链表
+     * 简单
+     * 给你一个链表的头节点 head ，判断链表中是否有环。
+     * 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。注意：pos 不作为参数进行传递 。仅仅是为了标识链表的实际情况。
+     * 如果链表中存在环 ，则返回 true 。 否则，返回 false 。
+     * <p>
+     * 示例 1：
+     * 输入：head = [3,2,0,-4], pos = 1
+     * 输出：true
+     * 解释：链表中有一个环，其尾部连接到第二个节点。
+     * 示例 2：
+     * 输入：head = [1,2], pos = 0
+     * 输出：true
+     * 解释：链表中有一个环，其尾部连接到第一个节点。
+     * 示例 3：
+     * 输入：head = [1], pos = -1
+     * 输出：false
+     * 解释：链表中没有环。
+     * <p>
+     * 提示：
+     * 链表中节点的数目范围是 [0, 104]
+     * -105 <= Node.val <= 105
+     * pos 为 -1 或者链表中的一个 有效索引 。
+     * <p>
+     * 进阶：你能用 O(1)（即，常量）内存解决此问题吗？
+     *
+     * @param head
+     * @return
+     */
+    public boolean hasCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast.val == slow.val) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 205. 同构字符串
+     * 简单
+     * 给定两个字符串 s 和 t ，判断它们是否是同构的。
+     * 如果 s 中的字符可以按某种映射关系替换得到 t ，那么这两个字符串是同构的。
+     * 每个出现的字符都应当映射到另一个字符，同时不改变字符的顺序。不同字符不能映射到同一个字符上，相同字符只能映射到同一个字符上，字符可以映射到自己本身。
+     * <p>
+     * 示例 1:
+     * 输入：s = "egg", t = "add"
+     * 输出：true
+     * 示例 2：
+     * 输入：s = "foo", t = "bar"
+     * 输出：false
+     * 示例 3：
+     * 输入：s = "paper", t = "title"
+     * 输出：true
+     * <p>
+     * 提示：
+     * 1 <= s.length <= 5 * 104
+     * t.length == s.length
+     * s 和 t 由任意有效的 ASCII 字符组成
+     *
+     * @param s
+     * @param t
+     * @return
+     */
+    public boolean isIsomorphic(String s, String t) {
+        int[] cnt1 = new int[256];
+        int[] cnt2 = new int[256];
+        int len = s.length();
+        for (int i = 0; i < len; i++) {
+            int c1 = s.charAt(i);
+            int c2 = t.charAt(i);
+            if (cnt1[c1] > 0 || cnt2[c2] > 0) {
+                if (cnt1[c1] != (c2 + 1) ||
+                        cnt2[c2] != (c1 + 1)) {
+                    return false;
+                }
+            } else {
+                cnt1[c1] = c2 + 1;
+                cnt2[c2] = c1 + 1;
+            }
+        }
+        return true;
+    }
 }
 
